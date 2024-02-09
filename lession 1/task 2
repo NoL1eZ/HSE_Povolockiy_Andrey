@@ -1,14 +1,35 @@
-participants = []
-
-for i in range(3):
-    name = input("Введите наименование участника: ")
-    status = input("Введите статус участника: ")
-    inn = input("Введите ИНН участника: ")
-
+def add_new_participant(name, status, inn):
     participant = {"name": name, "status": status, "inn": inn}
     participants.append(participant)
 
-# Вывод данных в консоль
-print("Структура данных 'Участники спора':")
-for participant in participants:
-    print(participant)
+def print_participants_info():
+    for participant in participants:
+        inn = participant['inn']
+        status = participant['status']
+        name = participant['name']
+        print(f"ИНН участника: {inn}, статус участника: {status}, наименование участника: {name}")
+
+def process_user_command():
+    while True:
+        command = input("Введите команду: ")
+
+        if command == "q":
+            print("Работа программы завершена.")
+            break
+
+        elif command == "add":
+            name = input("Введите наименование участника: ")
+            status = input("Введите статус участника: ")
+            inn = input("Введите ИНН участника: ")
+            add_new_participant(name, status, inn)
+
+        elif command == "p":
+            print("Результат:")
+            print_participants_info()
+
+        else:
+            print("Некорректная команда. Попробуйте еще раз.")
+
+participants = []
+
+process_user_command()
