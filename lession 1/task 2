@@ -1,0 +1,14 @@
+participants = []
+
+for i in range(3):
+    name = input("Введите наименование участника: ")
+    status = input("Введите статус участника: ")
+    inn = input("Введите ИНН участника: ")
+
+    participant = {"name": name, "status": status, "inn": inn}
+    participants.append(participant)
+
+# Вывод данных в консоль
+print("Структура данных 'Участники спора':")
+for participant in participants:
+    print(participant)
