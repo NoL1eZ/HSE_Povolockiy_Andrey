@@ -20,4 +20,5 @@ with open('traders.csv', 'w', newline='') as f:
     writer = csv.writer(f, delimiter=';')
     writer.writerow(['INN', 'OGRN', 'ADDRESS'])
     for i in traders:
+        # print([i['inn'], i['ogrn'], i['address']])
         writer.writerow([i['inn'], i['ogrn'], i['address']])
