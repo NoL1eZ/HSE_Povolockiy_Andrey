@@ -1,0 +1,41 @@
+from random import randint
+import time
+ranger = [i for i in range(10, 250000000, randint(3, 5))]
+ranger.sort()
+
+def sercher_bin(num_list: list, item: int):
+    low = 0
+    high = len(num_list) -1
+    while low <= high:
+        mid = (low + high) // 2
+        guess = num_list[mid]
+        if guess == item:
+            return True
+        elif guess > item:
+            high = mid - 1
+        else:
+            low = mid + 1
+    return False
+
+def sercher_lin(list, item):
+    for val in enumerate(list):
+        if val[1] == item:
+            return val[0]
+    return None
+
+# фиксируем время старта работы кода
+start = time.monotonic_ns()
+
+sercher_bin(ranger, 11)
+#фиксируем время окончания работы кода
+finish = time.monotonic_ns()
+# вычитаем время старта из времени окончания и выводим результат
+print('Время работы: ' + str(finish - start))
+
+start = time.monotonic_ns()
+
+sercher_lin(ranger, 11)
+#фиксируем время окончания работы кода
+finish = time.monotonic_ns()
+# вычитаем время старта из времени окончания и выводим результат
+print('Время работы: ' + str(finish - start))
