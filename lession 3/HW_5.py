@@ -4,22 +4,22 @@ import csv
 import re
 
 
-def traders:
+def traders():
     with open('traders.txt', 'r') as file:
         traders_inn = file.read()
     with open('traders.json', 'r') as file:
         data = json.load(file)
 
-    traders = []
+    traders_list = []
 
     for trader in data:
         if trader['inn'] in traders_inn:
-            traders.append(trader)
+            traders_list.append(trader)
 
     with open('traders.csv', 'w', newline='') as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerow(['INN', 'OGRN', 'ADDRESS'])
-        for i in traders:
+        for i in traders_list:
             writer.writerow([i['inn'], i['ogrn'], i['address']])
 
 
@@ -31,30 +31,32 @@ inn_person_exprission = re.compile(r'\b\d{12}\b')
 def email_from_efrsb(file):
     with open(file, "r") as f:
         message = json.load(f)
-    results = {}
+
+    results_dict = {}
 
     for i in message:
-        emails = re.findall(email_pattern, i['msg_text'])
+        emails = re.findall(email_exprission, i['msg_text'])
         for email in emails:
-            email = email.lower()
-            searched = results.get(i['publisher_inn'])
-            if searched and email not in searched:
-                results[i['publisher_inn']].append(email)
-            elif not searched:
+            search = results_dict.get(i['publisher_inn'])
+            if search and email.lower() not in search:
+                results_dict[i['publisher_inn']].append(email)
+            else:
                 new_item = {i['publisher_inn']: [email]}
-                results.update(new_item)
-    inverted = {}
-    for inn, emails in results.items():
+                results_dict.update(new_item)
+
+    inverted_dict = {}
+
+    for inn, emails in results_dict.items():
         for email in emails:
-            searched = inverted.get(email)
-            if searched and inn not in searched:
-                inverted[email].append(inn)
-            elif not searched:
+            search = inverted_dict.get(email)
+            if search and inn not in search:
+                inverted_dict[email].append(inn)
+            else:
                 new_item = {email: [inn]}
-                inverted.update(new_item)
+                inverted_dict.update(new_item)
 
     with open('emails.json', "w") as f:
-        json.dump(results, f)
+        json.dump(results_dict, f)
     print("stop")
 
 
