@@ -1,0 +1,20 @@
+import requests
+
+class ParserCBRF:
+    def __init__(self, сurrency_date=None):
+         self.сurrency_date = сurrency_date
+         if сurrency_date == None:
+            self.сurrency_date = date.today().strftime("%d.%m.%Y")
+         self.base_url = f'https://www.cbr.ru/currency_base/daily/?UniDbQuery.Posted=True&UniDbQuery.To={self.сurrency_date}'
+            
+    def __get_data(self):
+        r = requests.get(self.base_url) 
+        soup = BeautifulSoup(r.text, "html.parser")
+        data = soup.find("table", {"class": "data"})
+        # Создание списка заголовков таблицы
+        headers = [header.text for header in data.find_all('th')]
+        # Создание списка строк таблицы
+        rows = []
+        for row in data.find_all('tr')[1:]:
+            rows.append([val.text for val in row.find_all('td')])
+        return headers, rows
