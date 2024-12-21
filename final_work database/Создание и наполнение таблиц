@@ -1,0 +1,140 @@
+CREATE TABLE IF NOT EXISTS students (
+	sudent_id SERIAL PRIMARY KEY,
+	first_name VARCHAR(50) NOT NULL,
+	last_name VARCHAR(50) NOT NULL,
+	middle_name VARCHAR(50),
+	passport_number varchar(12) NOT NULL,
+	birth_date DATE NOT NULL,
+	gender CHAR(1) CHECK (gender IN ('M', 'F')),  
+    enrollment_year INT NOT NULL,         
+    faculty VARCHAR(100) NOT NULL,          
+    department VARCHAR(100),                 
+    group_name VARCHAR(20) NOT NULL,         
+    email VARCHAR(100) UNIQUE,              
+    phone_number VARCHAR(15),                
+    address TEXT,                          
+    status VARCHAR(20) DEFAULT 'active',     -- Статус (active, graduated, expelled )
+    created_at TIMESTAMP DEFAULT NOW(),      -- Дата и время создания записи
+    updated_at TIMESTAMP DEFAULT NOW()       -- Дата и время обновления записи
+);
+
+CREATE TABLE teachers (
+    teacher_id SERIAL PRIMARY KEY,          
+    first_name VARCHAR(50) NOT NULL,         
+    last_name VARCHAR(50) NOT NULL,         
+    middle_name VARCHAR(50),                
+    birth_date DATE NOT NULL,             
+    hire_date DATE NOT NULL,             
+    department VARCHAR(100) NOT NULL,       
+    position VARCHAR(100) NOT NULL,         
+    email VARCHAR(100) UNIQUE,             
+    phone_number VARCHAR(15),               
+    office_number VARCHAR(20),              
+    status VARCHAR(20) DEFAULT 'active',     -- Статус (active, retired, on_leave)
+    created_at TIMESTAMP DEFAULT NOW(),      -- Дата и время создания записи
+    updated_at TIMESTAMP DEFAULT NOW()       -- Дата и время обновления записи
+);
+
+ALTER TABLE students
+RENAME COLUMN sudent_id TO student_id;
+
+CREATE TABLE courses (
+    course_id SERIAL PRIMARY KEY,            
+    course_name VARCHAR(100) NOT NULL,       
+    course_description TEXT,                
+    created_at TIMESTAMP DEFAULT NOW(),     
+    updated_at TIMESTAMP DEFAULT NOW()      
+);
+
+CREATE TABLE student_courses (
+    id SERIAL PRIMARY KEY,
+    student_id INT REFERENCES students(student_id) ON DELETE CASCADE, 
+    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,   
+    enrollment_date DATE DEFAULT NOW()                               -- Дата зачисления
+);
+
+
+CREATE TABLE teacher_courses (
+    id SERIAL PRIMARY KEY,
+    teacher_id INT REFERENCES teachers(teacher_id) ON DELETE CASCADE, -- Ссылка на преподавателя
+    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE    -- Ссылка на курс
+);
+
+
+CREATE TABLE grades (
+    grade_id SERIAL PRIMARY KEY,             
+    student_id INT REFERENCES students(student_id) ON DELETE CASCADE, 
+    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,  
+    teacher_id INT REFERENCES teachers(teacher_id) ON DELETE CASCADE, 
+    grade INT CHECK (grade BETWEEN 1 AND 10), -- Оценка (от 1 до 10)
+    grade_date DATE DEFAULT NOW()            -- Дата выставления оценки
+);
+
+INSERT INTO students (first_name, last_name, middle_name, passport_number, birth_date, gender, enrollment_year, faculty, department, group_name, email, phone_number, address, status)
+VALUES
+('Иван', 'Иванов', 'Сергеевич', '123456789012', '2003-05-10', 'M', 2021, 'Факультет прикладной математики', 'Кафедра информатики', 'PM-01', 'ivan.ivanov@example.com', '+79161234567', 'г. Москва, ул. Пушкина, д. 10', 'active'),
+('Мария', 'Петрова', 'Алексеевна', '987654321098', '2002-08-15', 'F', 2020, 'Факультет экономики', 'Кафедра финансов', 'ECO-02', 'maria.petrov@example.com', '+79169876543', 'г. Санкт-Петербург, ул. Ленина, д. 25', 'active'),
+('Алексей', 'Сидоров', 'Викторович', '112233445566', '2001-11-20', 'M', 2019, 'Факультет физики', 'Кафедра теоретической физики', 'PHY-01', 'alexey.sidorov@example.com', '+79162345678', 'г. Екатеринбург, ул. Маяковского, д. 45', 'graduated'),
+('Екатерина', 'Кузнецова', 'Игоревна', '334455667788', '2003-04-22', 'F', 2021, 'Факультет биологии', 'Кафедра молекулярной биологии', 'BIO-03', 'ekaterina.kuznetsova@example.com', '+79162347856', 'г. Казань, ул. Гагарина, д. 8', 'active'),
+('Дмитрий', 'Андреев', 'Павлович', '556677889900', '2000-12-30', 'M', 2018, 'Факультет права', 'Кафедра уголовного права', 'LAW-05', 'dmitry.andreev@example.com', '+79163457890', 'г. Ростов-на-Дону, ул. Карла Маркса, д. 5', 'expelled'),
+('Ольга', 'Михайлова', 'Николаевна', '667788990011', '2002-07-10', 'F', 2020, 'Факультет журналистики', 'Кафедра международной журналистики', 'JRN-02', 'olga.mikhaylova@example.com', '+79161122334', 'г. Воронеж, ул. Советская, д. 18', 'active');
+
+
+INSERT INTO students (first_name, last_name, middle_name, passport_number, birth_date, gender, enrollment_year, faculty, department, group_name, email, phone_number, address, status)
+VALUES
+('Никита', 'Федоров', 'Иванович', '123789456012', '2002-11-05', 'M', 2021, 'Факультет информационных технологий', 'Кафедра программирования', 'IT-07', 'nikita.fedorov@example.com', '+79161247891', 'г. Новосибирск, ул. Строителей, д. 12', 'active'),
+('Светлана', 'Баранова', 'Сергеевна', '789456123024', '2001-06-15', 'F', 2020, 'Факультет лингвистики', 'Кафедра иностранных языков', 'LING-10', 'svetlana.baranova@example.com', '+79162368945', 'г. Пермь, ул. Кирова, д. 30', 'active'),
+('Петр', 'Тимофеев', 'Анатольевич', '456789123036', '2003-03-30', 'M', 2021, 'Факультет истории', 'Кафедра археологии', 'HIST-09', 'petr.timofeev@example.com', '+79162347891', 'г. Тюмень, ул. Ленина, д. 15', 'active'),
+('Юлия', 'Дмитриева', 'Николаевна', '321654987042', '2002-09-19', 'F', 2020, 'Факультет психологии', 'Кафедра психоанализа', 'PSY-11', 'yulia.dmitrieva@example.com', '+79163458901', 'г. Омск, ул. Советская, д. 11', 'active');
+
+INSERT INTO teachers (first_name, last_name, middle_name, birth_date, hire_date, department, position, email, phone_number, office_number, status)
+VALUES
+('Александр', 'Смирнов', 'Викторович', '1980-01-15', '2015-09-01', 'Факультет прикладной математики', 'Доцент', 'alexander.smirnov@example.com', '+79162345601', '101', 'active'),
+('Елена', 'Козлова', 'Игоревна', '1975-05-22', '2010-09-01', 'Факультет экономики', 'Профессор', 'elena.kozlova@example.com', '+79169876522', '202', 'active'),
+('Михаил', 'Николаев', 'Дмитриевич', '1982-07-25', '2012-08-01', 'Факультет физики', 'Доцент', 'mikhail.nikolaev@example.com', '+79162345989', '303', 'active'),
+('Ирина', 'Петрова', 'Сергеевна', '1988-02-14', '2017-02-01', 'Факультет биологии', 'Лаборант', 'irina.petrovna@example.com', '+79163457811', '404', 'active'),
+('Роман', 'Ефимов', 'Владимирович', '1978-11-11', '2010-06-01', 'Факультет истории', 'Профессор', 'roman.efimov@example.com', '+79161234578', '505', 'active'),
+('Виктория', 'Крылова', 'Ильинична', '1990-09-05', '2018-09-01', 'Факультет психологии', 'Ассистент', 'victoria.krylova@example.com', '+79163457890', '606', 'active'),
+('Игорь', 'Тимофеев', 'Петрович', '1985-03-18', '2013-03-01', 'Факультет лингвистики', 'Доцент', 'igor.timofeev@example.com', '+79161234876', '707', 'active'),
+('Ольга', 'Соколова', 'Николаевна', '1979-06-25', '2008-11-01', 'Факультет права', 'Профессор', 'olga.sokolova@example.com', '+79163458900', '808', 'active'),
+('Анна', 'Михайлова', 'Юрьевна', '1992-01-28', '2019-12-01', 'Факультет информационных технологий', 'Ассистент', 'anna.mikhaylova@example.com', '+79162347890', '909', 'active'),
+('Дмитрий', 'Жуков', 'Ильич', '1984-04-15', '2014-07-01', 'Факультет журналистики', 'Доцент', 'dmitry.zhukov@example.com', '+79163458912', '1001', 'active');
+
+
+INSERT INTO courses (course_name, course_description)
+VALUES
+('Математика', 'Основы математики для студентов технических специальностей'),
+('Экономика', 'Курс по экономике для студентов экономических факультетов'),
+('Физика', 'Основы теоретической физики'),
+('Биология', 'Курс по молекулярной биологии'),
+('История', 'Общий курс по истории для гуманитарных специальностей'),
+('Психология', 'Введение в психологию'),
+('Лингвистика', 'Основы лингвистики и иностранных языков'),
+('Право', 'Введение в правоведение и основы юриспруденции'),
+('Программирование', 'Основы программирования для студентов IT-специальностей'),
+('Журналистика', 'Введение в журналистику и СМИ');
+
+
+INSERT INTO student_courses (student_id, course_id)
+VALUES
+(1, 1), (1, 3), (2, 2), (2, 5), (3, 4), (3, 6),
+(4, 1), (4, 7), (5, 8), (5, 9), (6, 2), (6, 5),
+(7, 1), (7, 9), (8, 4), (8, 7), (9, 3), (9, 8),
+(10, 6), (10, 10);
+
+INSERT INTO teacher_courses (teacher_id, course_id)
+VALUES
+(1, 1), (1, 2), (2, 3), (2, 4), (3, 5), (3, 6),
+(4, 7), (4, 8), (5, 9), (5, 10), (6, 1), (6, 2),
+(7, 3), (7, 4), (8, 5), (8, 6), (9, 7), (9, 8),
+(10, 9), (10, 10);
+
+SELECT * FROM teachers
+
+INSERT INTO students (student_id, first_name, last_name, middle_name, passport_number, birth_date, gender, enrollment_year, faculty, department, group_name, email, phone_number, address, status)
+VALUES
+(1, 'Анна', 'Иванова', 'Сергеевна', '112233445566', '2002-10-01', 'F', 2021, 'Факультет математики', 'Кафедра высшей математики', 'MATH-01', 'anna.ivanova@example.com', '+79161234567', 'г. Москва, ул. Пушкина, д. 12', 'active'),
+(2, 'Владимир', 'Смирнов', 'Анатольевич', '223344556677', '2001-02-15', 'M', 2020, 'Факультет химии', 'Кафедра органической химии', 'CHEM-02', 'vladimir.smirnov@example.com', '+79169876543', 'г. Санкт-Петербург, ул. Ленина, д. 14', 'active'),
+(3, 'Елена', 'Петрова', 'Геннадьевна', '334455667788', '2003-04-20', 'F', 2021, 'Факультет медицины', 'Кафедра хирургии', 'MED-03', 'elena.petrova@example.com', '+79163457890', 'г. Екатеринбург, ул. Тимирязева, д. 25', 'active'),
+(4, 'Дмитрий', 'Кузнецов', 'Романович', '445566778899', '2002-11-10', 'M', 2020, 'Факультет экономики', 'Кафедра макроэкономики', 'ECO-04', 'dmitriy.kuznetsov@example.com', '+79162347856', 'г. Казань, ул. Дзержинского, д. 22', 'active'),
+(5, 'Мария', 'Васильева', 'Федоровна', '556677889900', '2001-07-05', 'F', 2019, 'Факультет социологии', 'Кафедра социальной работы', 'SOC-05', 'maria.vasileva@example.com', '+79162345987', 'г. Тюмень, ул. Карла Маркса, д. 10', 'graduated');
