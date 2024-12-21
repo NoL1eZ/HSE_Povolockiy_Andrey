@@ -1,11 +1,11 @@
 CREATE TABLE IF NOT EXISTS students (
-	sudent_id SERIAL PRIMARY KEY,
-	first_name VARCHAR(50) NOT NULL,
-	last_name VARCHAR(50) NOT NULL,
-	middle_name VARCHAR(50),
-	passport_number varchar(12) NOT NULL,
-	birth_date DATE NOT NULL,
-	gender CHAR(1) CHECK (gender IN ('M', 'F')),  
+    sudent_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    middle_name VARCHAR(50),
+    passport_number varchar(12) NOT NULL,
+    birth_date DATE NOT NULL,
+    gender CHAR(1) CHECK (gender IN ('M', 'F')),  
     enrollment_year INT NOT NULL,         
     faculty VARCHAR(100) NOT NULL,          
     department VARCHAR(100),                 
@@ -13,9 +13,9 @@ CREATE TABLE IF NOT EXISTS students (
     email VARCHAR(100) UNIQUE,              
     phone_number VARCHAR(15),                
     address TEXT,                          
-    status VARCHAR(20) DEFAULT 'active',     -- Статус (active, graduated, expelled )
-    created_at TIMESTAMP DEFAULT NOW(),      -- Дата и время создания записи
-    updated_at TIMESTAMP DEFAULT NOW()       -- Дата и время обновления записи
+    status VARCHAR(20) DEFAULT 'active',    
+    created_at TIMESTAMP DEFAULT NOW(),      
+    updated_at TIMESTAMP DEFAULT NOW()      
 );
 
 CREATE TABLE teachers (
@@ -30,9 +30,9 @@ CREATE TABLE teachers (
     email VARCHAR(100) UNIQUE,             
     phone_number VARCHAR(15),               
     office_number VARCHAR(20),              
-    status VARCHAR(20) DEFAULT 'active',     -- Статус (active, retired, on_leave)
-    created_at TIMESTAMP DEFAULT NOW(),      -- Дата и время создания записи
-    updated_at TIMESTAMP DEFAULT NOW()       -- Дата и время обновления записи
+    status VARCHAR(20) DEFAULT 'active',     
+    created_at TIMESTAMP DEFAULT NOW(),      
+    updated_at TIMESTAMP DEFAULT NOW()      
 );
 
 ALTER TABLE students
