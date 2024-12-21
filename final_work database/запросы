@@ -1,0 +1,51 @@
+SELECT 
+    s.student_id,
+    s.first_name,
+    s.last_name,
+    s.middle_name,
+    s.birth_date,
+    s.email,
+    s.group_name
+FROM 
+    students s
+JOIN 
+    student_courses sc ON s.student_id = sc.student_id
+WHERE 
+    sc.course_id = 1;
+   
+   
+SELECT c.course_name
+FROM courses c
+JOIN teacher_courses tc ON c.course_id = tc.course_id
+WHERE tc.teacher_id = 1;
+
+SELECT s.student_id, AVG(g.grade) AS average_grade
+FROM grades g
+JOIN students s ON g.student_id = s.student_id
+WHERE s.student_id = 3
+GROUP BY s.student_id;
+
+SELECT t.teacher_id, t.first_name, t.last_name, AVG(g.grade) AS average_grade
+FROM grades g
+JOIN teacher_courses tc ON g.course_id = tc.course_id
+JOIN teachers t ON tc.teacher_id = t.teacher_id
+GROUP BY t.teacher_id
+ORDER BY average_grade DESC;
+
+
+SELECT s.student_id, s.first_name, s.last_name, t.teacher_id, t.first_name AS teacher_first_name, t.last_name AS teacher_last_name
+FROM grades g
+JOIN students s ON g.student_id = s.student_id
+JOIN teacher_courses tc ON g.course_id = tc.course_id
+JOIN teachers t ON tc.teacher_id = t.teacher_id
+WHERE g.grade = 10;
+
+INSERT INTO students (first_name, last_name, middle_name, passport_number, birth_date, gender, enrollment_year, faculty, department, group_name, email, phone_number, address, status)
+VALUES ('Имя', 'Фамилия', 'Отчество', '123456789012', '1995-12-25', 'M', 2023, 'Факультет информатики', 'Кафедра программирования', 'IT-07', 'email@example.com', '+79000000000', 'Адрес', 'active');
+
+UPDATE teachers
+SET email = 'new_email@example.com', phone_number = '+79000000001'
+WHERE teacher_id = 1; 
+
+DELETE FROM courses
+WHERE course_id = 1;
